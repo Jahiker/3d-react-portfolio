@@ -6,18 +6,55 @@ import { styles } from "../styles";
 import { EarthCanvas } from "./canvas";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
+import { e } from "maath/dist/index-43782085.esm";
+
+const initialFormValue = {
+  name: "",
+  email: "",
+  message: "",
+};
 
 const Contact = () => {
   const formRef = useRef();
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const handleChange = () => {};
+  const [form, setForm] = useState(initialFormValue);
 
-  const hanldeSubmit = () => {};
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const hanldeSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    emailjs
+      .send(
+        "service_ojg62m4",
+        "template_xvfxe1l",
+        {
+          from_name: form.name,
+          to_name: "Jahiker",
+          from_email: form.email,
+          to_email: "rojasjahiker@gmail.com",
+          message: form.message,
+        },
+        "dhcXlXi0W3e5ldG3S"
+      )
+      .then(
+        (result) => {
+          setLoading(false);
+          alert("Thank you! I will get back to you as soon as possible.");
+        },
+        (error) => {
+          setLoading(false);
+          console.error(error);
+          alert(`Ups! Something went wrong: ${error.message}`);
+        }
+      );
+
+    setForm(initialFormValue);
+  };
 
   return (
     <div className="xl:mt-12 xl:flex-row flex-col-reverse flex gap-10 overflow-hidden">
